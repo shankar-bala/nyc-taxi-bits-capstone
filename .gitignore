@@ -43,7 +43,7 @@ Thumbs.db
 # Notebook build artifacts (the executed .ipynb is kept; HTML export is not)
 notebooks/*.html
 
-# Terraform (state and local provider cache are never committed)
+# Terraform (state, local provider cache and saved plans are never committed)
 **/.terraform/*
 *.tfstate
 *.tfstate.*
@@ -51,6 +51,12 @@ crash.log
 *.tfvars
 !*.tfvars.example
 .terraform.lock.hcl
+*.tfplan
 
 # Coverage report (generated in CI)
 coverage.xml
+
+# Generated model cards (run scripts.responsible.run_analysis to produce them;
+# the directory README is the only tracked file here)
+docs/model_cards/*.md
+!docs/model_cards/README.md

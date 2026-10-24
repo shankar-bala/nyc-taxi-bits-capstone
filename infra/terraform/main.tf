@@ -103,7 +103,9 @@ resource "aws_security_group" "service" {
 
 # --- Application Load Balancer ------------------------------------------------
 resource "aws_lb" "api" {
-  name               = "${local.name}-alb"
+  # ELB names are capped at 32 characters, which "${local.name}-alb" exceeds
+  # once project_name and environment are both long, so drop the suffix here.
+  name               = "${var.project_name}-alb"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb.id]
@@ -116,7 +118,7 @@ resource "aws_lb" "api" {
 }
 
 resource "aws_lb_target_group" "api" {
-  name        = "${local.name}-tg"
+  name        = "${var.project_name}-tg"
   port        = var.container_port
   protocol    = "HTTP"
   vpc_id      = data.aws_vpc.default.id

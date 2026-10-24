@@ -3,12 +3,12 @@
 Python application for two NYC taxi prediction tasks:
 
 - **Demand:** pickup count for one pickup zone and hour.
-- **Fare:** `fare_amount` for one trip, not the full passenger bill.
+- **Fare:** `fare_amount` for one trip
 
 The repository includes data processing, XGBoost/LightGBM training, MLflow
-tracking, FastAPI serving, recursive batch forecasts, SHAP explanations,
-subgroup evaluation, drift detection, a Streamlit dashboard, and optional AWS
+tracking, FastAPI serving, recursive batch forecasts, Streamlit dashboard, and optional AWS
 infrastructure templates. It contains no datasets or trained model bundles.
+
 
 ## Start Locally
 
@@ -24,10 +24,48 @@ py -3.11 -m venv .venv
 .\.venv\Scripts\python.exe -m pytest
 ```
 
+On macOS or Linux, use the corresponding POSIX paths:
+
+```bash
+python3.11 -m venv .venv
+./.venv/bin/python -m pip install -r requirements.txt
+./.venv/bin/python -m pytest
+```
+
 Tests use synthetic data and do not require downloads, models or AWS access.
 Follow [setup](docs/SETUP.md) to download data, train registered models, and
 start the API and dashboard. Do not expect working predictions immediately
 after cloning: serving requires both registered models and saved demand history.
+
+## Run Everything From a Clean Clone
+
+`scripts/deploy_all.py` runs every stage in dependency order and prints a
+pass/fail line per stage. It calls the same module entry points documented in
+[setup](docs/SETUP.md) rather than reimplementing them, so it cannot drift from
+the documented procedure. Create the environment as shown above first, then:
+
+```powershell
+.\.venv\Scripts\python.exe -m scripts.deploy_all
+```
+
+```bash
+./.venv/bin/python -m scripts.deploy_all
+```
+
+Script supports below arguments
+
+`--skip-download` to reuse the cache. 
+
+Useful flags:
+`--n-trials` for Optuna trials per estimator (default 1)
+`--horizon` for batch forecast hours (default 3)
+ `--skip-api` to stop before the readiness check.
+
+
+This covers the local route only. It needs no cloud account and creates no
+billable resources. Deploying the API to AWS is a separate, credentialed
+activity — see [the infrastructure runbook](infra/terraform/README.md) and
+[L9](docs/L9_AWS_INFRASTRUCTURE_LAB.md).
 
 ## Documentation
 
