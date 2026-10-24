@@ -43,12 +43,12 @@ jobs:
         run: ruff check .
 
       - name: Pytest with coverage
-        run: pytest --cov=src --cov-report=term-missing --cov-report=xml
+        run: pytest --cov=src --cov-report=term-missing --cov-report=xml:coverage.xml --cov-report=html:htmlcov
 
       - name: Upload coverage report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-xml
-          path: coverage.xml
+          name: html-coverage-xml
+          path: htmlcov/
           if-no-files-found: warn
